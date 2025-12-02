@@ -1,4 +1,3 @@
-
 * {
   margin: 0;
   padding: 0;
@@ -18,24 +17,27 @@ html {
 }
 
 :root {
-  --primary-bg: #09090B;
+  --primary-bg: #09090b;
   --secondary-bg: #141319;
-  --tertiary-bg: #17171C;
+  --tertiary-bg: #17171c;
 }
 
 .sp-text {
-   background: conic-gradient(at top, #c084fc, #a855f7); /* from-purple-400 → to-purple-500 */
+  background: conic-gradient(
+    at top,
+    #c084fc,
+    #a855f7
+  ); /* from-purple-400 → to-purple-500 */
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 }
 
-.icon{
+.icon {
   padding: 15px;
   font-size: 20px;
   border: 1px solid #1f2937;
   border-radius: 10px;
   background-color: var(--secondary-bg);
   cursor: pointer;
-};
- 
+}
