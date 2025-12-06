@@ -48,16 +48,29 @@ const Home = () => {
       return toast.error("Please describe your component first");
 
     // Check if API key is set
-    if (apiKey === "YOUR_API_KEY") {
+    if (
+      !apiKey ||
+      apiKey === "YOUR_API_KEY" ||
+      apiKey === "your_api_key_here" ||
+      apiKey === "YOUR_ACTUAL_API_KEY_HERE"
+    ) {
       toast.error(
-        "Please set your Google AI API key in environment variable VITE_GOOGLE_AI_API_KEY"
+        "Please set your Google AI API key in the .env file. Get your key from: https://aistudio.google.com/app/apikey"
+      );
+      return;
+    }
+
+    // Validate API key format (should start with AIzaSy)
+    if (!apiKey.startsWith("AIzaSy")) {
+      toast.error(
+        "Invalid API key format. Google AI API keys should start with 'AIzaSy'. Please check your .env file."
       );
       return;
     }
 
     try {
       setLoading(true);
-      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+      const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
       const promptText = `You are an experienced programmer with expertise in web development and UI/UX design. You create modern, animated, and fully responsive UI components. You are highly skilled in HTML, CSS, Tailwind CSS, Bootstrap, JavaScript, React, Next.js, Vue.js, Angular, and more.
 
@@ -81,9 +94,19 @@ Requirements:
       setOutputScreen(true);
     } catch (error) {
       console.error(error);
-      toast.error(
-        error.message || "Something went wrong while generating code"
-      );
+      let errorMessage = "Something went wrong while generating code";
+
+      if (
+        error.message?.includes("API key not valid") ||
+        error.message?.includes("API_KEY_INVALID")
+      ) {
+        errorMessage =
+          "Invalid API key. Make sure:\n1. Your API key is correct in the .env file\n2. You restarted the dev server after adding the key\n3. The key starts with 'AIzaSy'\n4. There are no spaces or quotes around the key\nGet a new key from: https://aistudio.google.com/app/apikey";
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }
